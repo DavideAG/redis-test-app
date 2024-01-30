@@ -1,0 +1,8 @@
+--- just using LB
+sudo minikube tunnel
+https://127.0.0.1
+
+cert is invalid -> we are using the same of task2
+
+
+minikube tunnel

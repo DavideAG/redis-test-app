@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: geoapp-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: geoapp
+  template:
+    metadata:
+      labels:
+        app: geoapp
+    spec:
+      containers:
+      - name: geoapp-container
+        image: geoapp:1.1
+        ports:
+        - containerPort: 443
+        volumeMounts:
+        - name: tls
+          mountPath: "/app/certs/"
+          readOnly: true
+        env:
+        - name: REDIS_HOST
+          value: "redis-service"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-credentials
+              key: password
+      volumes:
+      - name: tls
+        secret:
+          secretName: tls-secret
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis-container
+        image: redis:6.2
+        ports:
+        - containerPort: 6379
