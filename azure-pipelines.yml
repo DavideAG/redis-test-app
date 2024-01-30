@@ -1,0 +1,21 @@
+# redis-test-app pipeline
+
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+jobs:
+  - job: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - bash: |
+          echo first-step
+          echo done
+        displayName: first step 
+      - bash: |
+          echo second-step
+          echo done
+        displayName: second step
